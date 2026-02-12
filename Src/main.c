@@ -21,6 +21,7 @@
 #include "lvgl.h"
 #include "lcd_controller.h"
 #include "ili9341.h"
+#include "ui.h"
 
 #define TRUE 	1
 #define FALSE 	0
@@ -34,10 +35,16 @@ void GPIO_Init(void);
 UART_HandleTypeDef huart2;
 SPI_HandleTypeDef hspi3;
 extern DMA_HandleTypeDef hdma_spi3_tx;
-
+extern uint8_t speed;
 int main(void)
 {
 	HAL_Init();
+	
+	/* Enable Instruction and Data Caches, and Flash Prefetch for STM32F4 performance */
+	__HAL_FLASH_INSTRUCTION_CACHE_ENABLE();
+	__HAL_FLASH_DATA_CACHE_ENABLE();
+	__HAL_FLASH_PREFETCH_BUFFER_ENABLE();
+
 	SystemClock_Config();
 	UART2_Init();
 	GPIO_Init(); // Critical: Enables GPIOD clock for DC, RST, CS
@@ -49,20 +56,18 @@ int main(void)
 	lv_port_disp_init();
 	
 
-	/* Create a simple Hello World label */
-	lv_obj_t * label = lv_label_create(lv_screen_active());
-	lv_label_set_text(label, "Hello LVGL v9.4!");
-	lv_obj_align(label, LV_ALIGN_CENTER, 0, -20);
-
-	lv_obj_t * button = lv_button_create(lv_screen_active());
-	lv_obj_align(button, LV_ALIGN_CENTER, 0, 30);
-	lv_obj_t * btn_label = lv_label_create(button);
-	lv_label_set_text(btn_label, "Click Me");
-
+	ui_init();
+	
 	DEBUG_PRINT(&huart2, "LVGL system initialized!\r\n");
 
+	static int8_t direction = 1;
 	while (1)
 	{
+		speed += direction;
+		if (speed >= 120) direction = -1;
+		else if (speed <= 0) direction = 1;
+
+		ui_tick();
 		lv_timer_handler();
 		HAL_Delay(5);
 	}
