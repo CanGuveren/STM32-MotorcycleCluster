@@ -3,7 +3,7 @@
 #include "lvgl.h"
 
 extern UART_HandleTypeDef huart2;
-extern DMA_HandleTypeDef hdma_spi3_tx;
+extern DMA_HandleTypeDef hdma_spi1_tx;
 
 void NMI_Handler(void)
 {
@@ -69,7 +69,7 @@ void SysTick_Handler(void)
 }
 
 
-void DMA1_Stream5_IRQHandler(void)
+void DMA2_Stream3_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(&hdma_spi3_tx);
+  HAL_DMA_IRQHandler(&hdma_spi1_tx);
 }

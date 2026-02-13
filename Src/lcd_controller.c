@@ -136,9 +136,10 @@ static void disp_flush(lv_display_t * disp_drv, const lv_area_t * area, uint8_t 
 	ILI9341_DrawBitmapDMA(w, h, (uint8_t *)px_map);
 }
 
+extern SPI_HandleTypeDef hspi1;
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
-	if(hspi->Instance == SPI3)
+	if(hspi->Instance == SPI1)
 	{
 		ILI9341_EndOfDrawBitmap();
 		lv_display_flush_ready(lv_display_get_default());

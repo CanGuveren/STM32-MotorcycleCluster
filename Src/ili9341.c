@@ -47,7 +47,7 @@ typedef enum {
 	ROTATE_270
 } LCD_Horizontal_t;
 
-extern SPI_HandleTypeDef hspi3;
+extern SPI_HandleTypeDef hspi1;
 void ILI9341_Reset(void);
 void ILI9341_SoftReset(void);
 
@@ -63,7 +63,7 @@ static void CS_H(void);
 
 void sendSPI (uint8_t *data, int size)
 {
-	HAL_SPI_Transmit(&hspi3, data, size, HAL_MAX_DELAY);
+	HAL_SPI_Transmit(&hspi1, data, size, HAL_MAX_DELAY);
 }
 
 void Delay (uint16_t ms)
@@ -312,7 +312,7 @@ void ILI9341_FillScreen(uint16_t color)
 	DC_H();
 	ConvHL(s, (int32_t)w*h*2);
 	CS_L();
- 	HAL_SPI_Transmit_DMA(&hspi3, (uint8_t*)s, w * h *2);
+ 	HAL_SPI_Transmit_DMA(&hspi1, (uint8_t*)s, w * h *2);
 }
 
 void ILI9341_EndOfDrawBitmap(void)

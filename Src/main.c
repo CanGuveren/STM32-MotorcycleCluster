@@ -29,16 +29,23 @@
 void Error_Handler(void);
 void SystemClock_Config(void);
 void UART2_Init(void);
-void SPI3_Init(void);
+void SPI1_Init(void);
 void GPIO_Init(void);
 
 UART_HandleTypeDef huart2;
-SPI_HandleTypeDef hspi3;
-extern DMA_HandleTypeDef hdma_spi3_tx;
+SPI_HandleTypeDef hspi1;
+extern DMA_HandleTypeDef hdma_spi1_tx;
 extern uint8_t speed;
+
+/* LVGL Heap placed in CCMRAM (Core Coupled Memory) for performance */
+uint8_t lv_heap_ccmram[64 * 1024] __attribute__((section(".ccmram")));
+
 int main(void)
 {
 	HAL_Init();
+	
+	/* Manually zero-initialize CCMRAM heap since startup code doesn't do it */
+	memset(lv_heap_ccmram, 0, sizeof(lv_heap_ccmram));
 	
 	/* Enable Instruction and Data Caches, and Flash Prefetch for STM32F4 performance */
 	__HAL_FLASH_INSTRUCTION_CACHE_ENABLE();
@@ -48,8 +55,8 @@ int main(void)
 	SystemClock_Config();
 	UART2_Init();
 	GPIO_Init(); // Critical: Enables GPIOD clock for DC, RST, CS
-	/* SPI3_Init must be before ILI9341_Init */
-	SPI3_Init();
+	/* SPI1_Init must be before ILI9341_Init */
+	SPI1_Init();
 
 	/* LVGL Initialization */
 	lv_init();
@@ -69,7 +76,7 @@ int main(void)
 
 		ui_tick();
 		lv_timer_handler();
-		HAL_Delay(5);
+		HAL_Delay(16);
 	}
 }
 
@@ -128,22 +135,22 @@ void UART2_Init(void)
 	  }
 }
 
-void SPI3_Init(void)
+void SPI1_Init(void)
 {
-  /* SPI3 parameter configuration*/
-  hspi3.Instance = SPI3;
-  hspi3.Init.Mode = SPI_MODE_MASTER;
-  hspi3.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi3.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi3.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi3.Init.CLKPhase = SPI_PHASE_1EDGE;
-  hspi3.Init.NSS = SPI_NSS_SOFT;
-  hspi3.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2; // 84Mhz / 2 = 42MHz
-  hspi3.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi3.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi3.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi3.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi3) != HAL_OK)
+  /* SPI1 parameter configuration*/
+  hspi1.Instance = SPI1;
+  hspi1.Init.Mode = SPI_MODE_MASTER;
+  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.NSS = SPI_NSS_SOFT;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2; // 84Mhz / 2 = 42MHz
+  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi1.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi1) != HAL_OK)
   {
     Error_Handler();
   }
