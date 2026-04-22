@@ -11,7 +11,6 @@ extern const lv_font_t ui_font_orbitron_10;
 extern const lv_font_t ui_font_borlow_48;
 extern const lv_font_t ui_font_orbitron_36;
 
-
 #ifndef EXT_FONT_DESC_T
 #define EXT_FONT_DESC_T
 typedef struct _ext_font_desc_t {

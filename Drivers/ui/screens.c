@@ -8,7 +8,6 @@
 #include "styles.h"
 #include "ui.h"
 #include "ui_controller.h"
-
 #include <string.h>
 
 objects_t objects;
@@ -22,8 +21,7 @@ lv_obj_t *tick_value_change_obj;
 //
 // Screens
 //
-uint8_t speed = 0;
-
+uint8_t speed;
 void create_screen_main() {
     lv_obj_t *obj = lv_obj_create(0);
     objects.main = obj;
@@ -33,7 +31,7 @@ void create_screen_main() {
     {
         lv_obj_t *parent_obj = obj;
         {
-        	// SpeedValText
+            // SpeedValText
             lv_obj_t *obj = lv_label_create(parent_obj);
             objects.speed_val_text = obj;
             lv_obj_set_pos(obj, 0, -6);
@@ -41,11 +39,10 @@ void create_screen_main() {
             lv_obj_set_style_text_font(obj, &ui_font_borlow_48, LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-            //lv_label_set_text(obj, "0");
-            lv_label_set_text_fmt(obj, "%d", speed);
+            lv_label_set_text(obj, "0");
         }
         {
-        	// FuelTemplate
+            // FuelTemplate
             lv_obj_t *obj = lv_image_create(parent_obj);
             objects.fuel_template = obj;
             lv_obj_set_pos(obj, 30, 80);
@@ -56,11 +53,11 @@ void create_screen_main() {
             // GearTemplate
             lv_obj_t *obj = lv_image_create(parent_obj);
             objects.gear_template = obj;
-            lv_obj_set_pos(obj, 200, 80);
+            lv_obj_set_pos(obj, 205, 80);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
             lv_image_set_src(obj, &img_gear_group_n);
             {
-            	lv_obj_t *parent_obj = obj;
+                lv_obj_t *parent_obj = obj;
                 {
                     // GearValText
                     lv_obj_t *obj = lv_label_create(parent_obj);
@@ -281,14 +278,29 @@ void create_screen_main() {
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
             lv_image_set_src(obj, &img_road_right_lines);
         }
+        {
+            // LeftSignal
+            lv_obj_t *obj = lv_image_create(parent_obj);
+            objects.left_signal = obj;
+            lv_obj_set_pos(obj, 11, 16);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_image_set_src(obj, &img_left_signal);
+        }
+        {
+            // RightSignal
+            lv_obj_t *obj = lv_image_create(parent_obj);
+            objects.right_signal = obj;
+            lv_obj_set_pos(obj, 290, 16);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_image_set_src(obj, &img_right_signal);
+        }
     }
-    
     ui_controller_init();
     tick_screen_main();
 }
 
 void tick_screen_main() {
-    ui_controller_update(speed);
+	ui_controller_update(speed);
 }
 
 typedef void (*tick_screen_func_t)();
@@ -307,9 +319,9 @@ void tick_screen_by_id(enum ScreensEnum screenId) {
 //
 
 ext_font_desc_t fonts[] = {
-	    { "Orbitron_10", &ui_font_orbitron_10 },
-	    { "Borlow_48", &ui_font_borlow_48 },
-	    { "Orbitron_36", &ui_font_orbitron_36 },
+    { "Orbitron_10", &ui_font_orbitron_10 },
+    { "Borlow_48", &ui_font_borlow_48 },
+    { "Orbitron_36", &ui_font_orbitron_36 },
 #if LV_FONT_MONTSERRAT_8
     { "MONTSERRAT_8", &lv_font_montserrat_8 },
 #endif

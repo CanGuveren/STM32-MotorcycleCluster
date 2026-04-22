@@ -78,7 +78,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 
     /* DMA interrupt init */
     /* DMA2_Stream3_IRQn interrupt configuration */
-    HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 5, 0);
+    HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 6, 0);
     HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
   }
 }

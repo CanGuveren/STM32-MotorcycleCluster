@@ -45,6 +45,8 @@ typedef struct _objects_t {
     lv_obj_t *gear_text_1;
     lv_obj_t *road_left_lines;
     lv_obj_t *road_right_lines;
+    lv_obj_t *left_signal;
+    lv_obj_t *right_signal;
 } objects_t;
 
 extern objects_t objects;

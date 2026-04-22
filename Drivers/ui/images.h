@@ -24,6 +24,8 @@ extern const lv_img_dsc_t img_speed15;
 extern const lv_img_dsc_t img_speed12;
 extern const lv_img_dsc_t img_road_left_lines;
 extern const lv_img_dsc_t img_road_right_lines;
+extern const lv_img_dsc_t img_left_signal;
+extern const lv_img_dsc_t img_right_signal;
 
 #ifndef EXT_IMG_DESC_T
 #define EXT_IMG_DESC_T
@@ -33,7 +35,7 @@ typedef struct _ext_img_desc_t {
 } ext_img_desc_t;
 #endif
 
-extern const ext_img_desc_t images[17];
+extern const ext_img_desc_t images[19];
 
 #ifdef __cplusplus
 }

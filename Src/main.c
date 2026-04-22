@@ -22,6 +22,8 @@
 #include "lcd_controller.h"
 #include "ili9341.h"
 #include "ui.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 #define TRUE 	1
 #define FALSE 	0
@@ -31,11 +33,15 @@ void SystemClock_Config(void);
 void UART2_Init(void);
 void SPI1_Init(void);
 void GPIO_Init(void);
+void lvglTask(void *params);
+
 
 UART_HandleTypeDef huart2;
 SPI_HandleTypeDef hspi1;
 extern DMA_HandleTypeDef hdma_spi1_tx;
 extern uint8_t speed;
+
+TaskHandle_t lvglTaskHandle = NULL;
 
 /* LVGL Heap placed in CCMRAM (Core Coupled Memory) for performance */
 uint8_t lv_heap_ccmram[64 * 1024] __attribute__((section(".ccmram")));
@@ -55,20 +61,28 @@ int main(void)
 	SystemClock_Config();
 	UART2_Init();
 	GPIO_Init(); // Critical: Enables GPIOD clock for DC, RST, CS
-	/* SPI1_Init must be before ILI9341_Init */
-	SPI1_Init();
+	SPI1_Init(); // SPI1_Init must be before ILI9341_Init
 
-	/* LVGL Initialization */
-	lv_init();
+
+	lv_init(); // LVGL Initialization
 	lv_port_disp_init();
 	
-
 	ui_init();
 	
 	DEBUG_PRINT(&huart2, "LVGL system initialized!\r\n");
+	xTaskCreate(lvglTask, "LVGL Task", configMINIMAL_STACK_SIZE + 1024, NULL, 4, &lvglTaskHandle);
+	vTaskStartScheduler();
 
-	static int8_t direction = 1;
 	while (1)
+	{
+
+	}
+}
+
+void lvglTask(void *params)
+{
+	static int8_t direction = 1;
+	while(1)
 	{
 		speed += direction;
 		if (speed >= 120) direction = -1;
@@ -76,9 +90,11 @@ int main(void)
 
 		ui_tick();
 		lv_timer_handler();
-		HAL_Delay(16);
+
+		vTaskDelay(pdMS_TO_TICKS(16));
 	}
 }
+
 
 void SystemClock_Config()
 {

@@ -4,6 +4,7 @@
 
 extern UART_HandleTypeDef huart2;
 extern DMA_HandleTypeDef hdma_spi1_tx;
+extern TIM_HandleTypeDef htim6;
 
 void NMI_Handler(void)
 {
@@ -44,32 +45,20 @@ void UsageFault_Handler(void)
   }
 }
 
-void SVC_Handler(void)
-{
-
-}
-
 void DebugMon_Handler(void)
 {
-
+  while (1)
+  {
+  }
 }
-
-
-void PendSV_Handler(void)
-{
-
-}
-
-
-void SysTick_Handler(void)
-{
-  HAL_IncTick();
-  lv_tick_inc(1);
-  //HAL_SYSTICK_IRQHandler();
-}
-
 
 void DMA2_Stream3_IRQHandler(void)
 {
-  HAL_DMA_IRQHandler(&hdma_spi1_tx);
+	HAL_DMA_IRQHandler(&hdma_spi1_tx);
+}
+
+
+void TIM6_DAC_IRQHandler(void)
+{
+	HAL_TIM_IRQHandler(&htim6);
 }

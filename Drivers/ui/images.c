@@ -1,6 +1,6 @@
 #include "images.h"
 
-const ext_img_desc_t images[17] = {
+const ext_img_desc_t images[19] = {
     { "FuelFill", &img_fuel_fill },
     { "FuelLevel", &img_fuel_level },
     { "GearGroupN", &img_gear_group_n },
@@ -18,4 +18,6 @@ const ext_img_desc_t images[17] = {
     { "Speed12", &img_speed12 },
     { "RoadLeftLines", &img_road_left_lines },
     { "RoadRightLines", &img_road_right_lines },
+    { "LeftSignal", &img_left_signal },
+    { "RightSignal", &img_right_signal },
 };
